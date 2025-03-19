@@ -121,16 +121,76 @@ function budhilaw_blog_widgets_init() {
 }
 add_action( 'widgets_init', 'budhilaw_blog_widgets_init' );
 
+// Load custom widget loader
+require get_template_directory() . '/inc/widgets/widget-loader.php';
+
+/**
+ * Force CSS reload on thumbnail settings changes
+ */
+function budhilaw_blog_cache_buster() {
+    $theme_options = get_option('budhilaw_blog_options', array());
+    $thumbnail_position = isset($theme_options['thumbnail_position']) ? $theme_options['thumbnail_position'] : 'top';
+    $thumbnail_size = isset($theme_options['thumbnail_size']) ? $theme_options['thumbnail_size'] : 'medium';
+    
+    // Use a daily timestamp instead of seconds to prevent too many cache versions
+    $daily_timestamp = floor(time() / 86400); // 86400 seconds in a day
+    
+    $version = BUDHILAW_BLOG_VERSION . '-' . $thumbnail_position . '-' . $thumbnail_size . '-' . $daily_timestamp;
+    
+    return $version;
+}
+
 /**
  * Enqueue scripts and styles.
  */
 function budhilaw_blog_scripts() {
-    // Enqueue main stylesheet
-    wp_enqueue_style( 'budhilaw-blog-style', get_stylesheet_uri(), array(), BUDHILAW_BLOG_VERSION );
+    // Main stylesheet
+    wp_enqueue_style(
+        'budhilaw-blog-style',
+        get_stylesheet_uri(),
+        array(),
+        budhilaw_blog_cache_buster()
+    );
     
+    // Custom styles to ensure thumbnail settings are applied
+    wp_add_inline_style('budhilaw-blog-style', '
+        /* Force thumbnail settings to apply */
+        .has-thumbnail-beside .post-wrapper {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 1.5rem !important;
+        }
+        
+        .post-wrapper.has-beside-layout {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+        
+        .post-wrapper.has-top-layout {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        .post-thumbnail-top img,
+        .thumbnail-beside img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+    ');
+    
+    // Script
+    wp_enqueue_script(
+        'budhilaw-blog-script',
+        get_template_directory_uri() . '/assets/js/script.js',
+        array('jquery'),
+        budhilaw_blog_cache_buster(),
+        true
+    );
+
     // Enqueue theme JavaScript
     wp_enqueue_script( 'budhilaw-blog-navigation', get_template_directory_uri() . '/js/navigation.js', array(), BUDHILAW_BLOG_VERSION, true );
     wp_enqueue_script( 'budhilaw-blog-theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', array(), BUDHILAW_BLOG_VERSION, true );
+    wp_enqueue_script( 'budhilaw-blog-sidebar-check', get_template_directory_uri() . '/js/sidebar-check.js', array(), BUDHILAW_BLOG_VERSION, true );
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
@@ -146,7 +206,7 @@ require get_template_directory() . '/inc/template-tags.php';
 /**
  * Custom widgets for this theme.
  */
-require get_template_directory() . '/inc/widgets.php';
+// require get_template_directory() . '/inc/widgets.php'; // Removed to prevent conflicts with modular widget system
 
 /**
  * Customizer additions.
@@ -157,6 +217,11 @@ require get_template_directory() . '/inc/customizer.php';
  * Load custom nav walker.
  */
 require get_template_directory() . '/inc/class-budhilaw-blog-nav-walker.php';
+
+/**
+ * Load theme options.
+ */
+require get_template_directory() . '/inc/theme-options.php';
 
 /**
  * Adds custom classes to the array of body classes.
@@ -204,4 +269,3 @@ function budhilaw_blog_excerpt_more( $more ) {
     return '...';
 }
 add_filter( 'excerpt_more', 'budhilaw_blog_excerpt_more' );
-

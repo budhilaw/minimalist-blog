@@ -2,106 +2,86 @@
 /**
  * The main template file
  *
+ * This is the most generic template file in a WordPress theme
+ * and one of the two required files for a theme (the other being style.css).
+ * It is used to display a page when nothing more specific matches a query.
+ * E.g., it puts together the home page when no home.php file exists.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
  * @package Budhilaw_Blog
  */
 
 get_header();
+
+// Get the sidebar position option from theme
+global $budhilaw_blog_theme_options;
+$sidebar_position = 'right'; // Default position
+if (isset($budhilaw_blog_theme_options) && method_exists($budhilaw_blog_theme_options, 'get_options')) {
+    $options = $budhilaw_blog_theme_options->get_options();
+    if (isset($options['sidebar_position'])) {
+        $sidebar_position = $options['sidebar_position'];
+    }
+}
+
+// Check if sidebar should be disabled for this page
+$sidebar_disabled = isset($budhilaw_blog_theme_options) && 
+    method_exists($budhilaw_blog_theme_options, 'is_sidebar_disabled') && 
+    $budhilaw_blog_theme_options->is_sidebar_disabled();
+
+// Set container class based on sidebar position
+$container_class = 'site-content';
+if (!$sidebar_disabled) {
+    $container_class .= ' has-sidebar sidebar-' . esc_attr($sidebar_position);
+}
 ?>
 
-<div class="container">
-    <div class="site-content">
-        <main id="primary" class="content-area">
-            <?php if ( have_posts() ) : ?>
-                <header class="page-header">
-                    <?php
-                    if ( is_home() && ! is_front_page() ) :
-                        ?>
-                        <h1 class="page-title"><?php single_post_title(); ?></h1>
-                        <?php
-                    else :
-                        ?>
-                        <h1 class="page-title"><?php esc_html_e( 'Latest Articles', 'budhilaw-blog' ); ?></h1>
-                        <?php
-                    endif;
-                    ?>
-                </header><!-- .page-header -->
+	<div id="primary" class="<?php echo esc_attr($container_class); ?>">
+		<main id="main" class="site-main">
 
-                <?php
-                /* Start the Loop */
-                while ( have_posts() ) :
-                    the_post();
-                    ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class( 'post' ); ?>>
-                        <?php if ( has_post_thumbnail() ) : ?>
-                            <div class="post-thumbnail">
-                                <a href="<?php the_permalink(); ?>">
-                                    <?php the_post_thumbnail( 'post-thumbnail', array( 'alt' => the_title_attribute( 'echo=0' ) ) ); ?>
-                                </a>
-                            </div>
-                        <?php endif; ?>
+		<?php
+		if ( have_posts() ) :
 
-                        <header class="post-header">
-                            <?php
-                            $categories = get_the_category();
-                            if ( ! empty( $categories ) ) {
-                                echo '<a href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '" class="post-category">' . esc_html( $categories[0]->name ) . '</a>';
-                            }
-                            ?>
-                            <h2 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-                        </header>
+			if ( is_home() && ! is_front_page() ) :
+				?>
+				<header>
+					<h1 class="page-title screen-reader-text"><?php single_post_title(); ?></h1>
+				</header>
+				<?php
+			endif;
 
-                        <div class="post-content">
-                            <?php the_excerpt(); ?>
-                            <a href="<?php the_permalink(); ?>" class="read-more"><?php esc_html_e( 'Read More', 'budhilaw-blog' ); ?></a>
-                        </div>
+			/* Start the Loop */
+			while ( have_posts() ) :
+				the_post();
 
-                        <footer class="post-meta">
-                            <div class="post-meta-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                <?php the_author(); ?>
-                            </div>
-                            <div class="post-meta-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                <?php echo get_the_date(); ?>
-                            </div>
-                            <div class="post-meta-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                <?php
-                                $content = get_post_field( 'post_content', get_the_ID() );
-                                $word_count = str_word_count( strip_tags( $content ) );
-                                $reading_time = ceil( $word_count / 200 ); // Assuming 200 words per minute reading speed
-                                printf( 
-                                    _n( 
-                                        '%d min read', 
-                                        '%d min read', 
-                                        $reading_time, 
-                                        'budhilaw-blog' 
-                                    ), 
-                                    $reading_time 
-                                );
-                                ?>
-                            </div>
-                        </footer>
-                    </article>
-                    <?php
-                endwhile;
+				/*
+				 * Include the Post-Type-specific template for the content.
+				 * If you want to override this in a child theme, then include a file
+				 * called content-___.php (where ___ is the Post Type name) and that will be used instead.
+				 */
+				get_template_part( 'template-parts/content', get_post_type() );
 
-                the_posts_pagination( array(
-                    'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>' . __( 'Previous', 'budhilaw-blog' ),
-                    'next_text' => __( 'Next', 'budhilaw-blog' ) . '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>',
-                ) );
+			endwhile;
 
-            else :
+			the_posts_navigation();
 
-                get_template_part( 'template-parts/content', 'none' );
+		else :
 
-            endif;
-            ?>
-        </main><!-- #primary -->
+			get_template_part( 'template-parts/content', 'none' );
 
-        <?php get_sidebar(); ?>
-    </div>
-</div>
+		endif;
+		?>
+
+		</main><!-- #main -->
+
+		<?php
+		// Load sidebar if not disabled (inline)
+		if (!$sidebar_disabled && is_active_sidebar('sidebar-1')) : ?>
+			<aside id="secondary" class="widget-area">
+				<?php dynamic_sidebar('sidebar-1'); ?>
+			</aside><!-- #secondary -->
+		<?php endif; ?>
+	</div><!-- #primary -->
 
 <?php
 get_footer();

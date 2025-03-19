@@ -1,0 +1,118 @@
+/**
+ * Popular Articles Widget Styling
+ */
+
+/* Enhanced Popular Articles Section */
+.popular-articles {
+  margin-top: 1.5rem;
+}
+
+.popular-articles h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  position: relative;
+}
+
+.popular-articles h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: hsl(var(--primary));
+  transition: width 0.3s ease;
+}
+
+.popular-articles:hover h2::after {
+  width: 80px;
+}
+
+.popular-articles-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.popular-post-item {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  background-color: hsl(var(--card));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.popular-post-item:hover {
+  transform: translateX(5px);
+  background-color: hsl(var(--secondary));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.popular-post-link {
+  display: block;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+  color: hsl(var(--foreground));
+  transition: color 0.2s ease;
+}
+
+.popular-post-link:hover {
+  color: hsl(var(--primary));
+}
+
+.popular-post-date {
+  font-size: 0.75rem;
+  color: hsl(240 3.8% 36%);
+  display: flex;
+  align-items: center;
+}
+
+.popular-post-date::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: hsl(var(--primary) / 0.6);
+  margin-right: 0.5rem;
+}
+
+/* Dark Mode Styles */
+.dark .popular-post-item {
+  background-color: hsl(var(--card) / 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dark .popular-post-item:hover {
+  background-color: hsl(var(--secondary) / 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* General widget styling for popular posts */
+.widget_budhilaw_blog_popular_articles_widget .popular-posts-list {
+  list-style: none;
+}
+
+.widget_budhilaw_blog_popular_articles_widget .popular-post-item {
+  margin-bottom: 0.75rem;
+}
+
+.widget_budhilaw_blog_popular_articles_widget .popular-post-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.widget_budhilaw_blog_popular_articles_widget .popular-post-title:hover {
+  color: hsl(var(--primary));
+}
+
+.widget_budhilaw_blog_popular_articles_widget .popular-post-date {
+  font-size: 0.75rem;
+  color: hsl(240 3.8% 36%);
+} 
