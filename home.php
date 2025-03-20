@@ -62,7 +62,14 @@ if (!$sidebar_disabled) {
 
         endwhile;
 
-        the_posts_navigation();
+        // Replace the default navigation with custom pagination
+        if ( function_exists( 'budhilaw_blog_pagination' ) ) :
+            budhilaw_blog_pagination( array(
+                'total' => $wp_query->max_num_pages,
+            ) );
+        else :
+            the_posts_navigation();
+        endif;
 
     else :
 

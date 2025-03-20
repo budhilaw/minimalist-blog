@@ -224,6 +224,11 @@ require get_template_directory() . '/inc/class-budhilaw-blog-nav-walker.php';
 require get_template_directory() . '/inc/theme-options.php';
 
 /**
+ * Load custom template functions.
+ */
+require get_template_directory() . '/inc/template-functions.php';
+
+/**
  * Adds custom classes to the array of body classes.
  *
  * @param array $classes Classes for the body element.
