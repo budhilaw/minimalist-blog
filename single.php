@@ -24,6 +24,13 @@ $sidebar_disabled = isset($budhilaw_blog_theme_options) &&
     method_exists($budhilaw_blog_theme_options, 'is_sidebar_disabled') && 
     $budhilaw_blog_theme_options->is_sidebar_disabled();
 
+// Add body class if sidebar is disabled
+if ($sidebar_disabled) {
+    add_filter('body_class', function($classes) {
+        return array_merge($classes, array('no-sidebar'));
+    });
+}
+
 // Set container class based on sidebar position
 $container_class = 'site-content';
 if (!$sidebar_disabled) {

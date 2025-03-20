@@ -28,9 +28,23 @@ if (!is_singular() && has_post_thumbnail() && $thumbnail_position == 'beside') {
     $post_class .= ' has-thumbnail-beside';
 }
 
+// Check if sidebar is disabled
+$sidebar_disabled = isset($budhilaw_blog_theme_options) && 
+    method_exists($budhilaw_blog_theme_options, 'is_sidebar_disabled') && 
+    $budhilaw_blog_theme_options->is_sidebar_disabled();
+
 // Force style refresh by adding timestamp
 $style_refresh = time();
 ?>
+
+<?php 
+// Special case for single posts with disabled sidebar - display featured image at full width before post content
+if (is_singular() && has_post_thumbnail() && $sidebar_disabled) : 
+?>
+<div class="full-width-thumbnail">
+    <?php the_post_thumbnail('full', array('alt' => the_title_attribute('echo=0'))); ?>
+</div>
+<?php endif; ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class($post_class); ?> data-thumbnail-position="<?php echo esc_attr($thumbnail_position); ?>" data-thumbnail-size="<?php echo esc_attr($thumbnail_size); ?>" data-refresh="<?php echo $style_refresh; ?>">
 	<?php if (has_post_thumbnail() && !is_singular() && $thumbnail_position == 'top') : ?>
@@ -99,7 +113,10 @@ $style_refresh = time();
 				</div>
 			</header>
 
-			<?php if (has_post_thumbnail() && is_singular()) : ?>
+			<?php 
+			// Featured image handling for single posts - only display if sidebar is not disabled
+			if (has_post_thumbnail() && is_singular() && !$sidebar_disabled) : 
+			?>
 				<div class="post-thumbnail">
 					<?php the_post_thumbnail('large', array('alt' => the_title_attribute('echo=0'))); ?>
 				</div>
