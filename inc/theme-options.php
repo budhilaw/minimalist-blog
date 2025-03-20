@@ -25,8 +25,6 @@ class Budhilaw_Blog_Theme_Options {
      */
     private $default_options = array(
         'sidebar_position' => 'right',
-        'disable_sidebar_slugs' => '',
-        'disable_sidebar_singles' => false,
         'thumbnail_position' => 'top',
         'thumbnail_size' => 'medium',
     );
@@ -48,8 +46,6 @@ class Budhilaw_Blog_Theme_Options {
         $this->option_name = 'budhilaw_blog_options';
         $this->default_options = array(
             'sidebar_position' => 'right',
-            'disable_sidebar_slugs' => '',
-            'disable_sidebar_singles' => false,
             'thumbnail_position' => 'top',
             'thumbnail_size' => 'medium',
         );
@@ -113,22 +109,6 @@ class Budhilaw_Blog_Theme_Options {
         );
         
         add_settings_field(
-            'disable_sidebar_singles',
-            esc_html__('Disable Sidebar on Single Posts', 'budhilaw-blog'),
-            array($this, 'render_disable_sidebar_singles_field'),
-            'budhilaw-blog-options-layout',
-            'layout_section'
-        );
-        
-        add_settings_field(
-            'disable_sidebar_slugs',
-            esc_html__('Disable Sidebar on Specific Pages', 'budhilaw-blog'),
-            array($this, 'render_disable_sidebar_field'),
-            'budhilaw-blog-options-layout',
-            'layout_section'
-        );
-        
-        add_settings_field(
             'thumbnail_position',
             esc_html__('Post Thumbnail Position', 'budhilaw-blog'),
             array($this, 'render_thumbnail_position_field'),
@@ -186,57 +166,16 @@ class Budhilaw_Blog_Theme_Options {
                 </span>
                 <span class="layout-label"><?php esc_html_e('Left Sidebar', 'budhilaw-blog'); ?></span>
             </label>
+            
+            <label class="sidebar-position-option">
+                <input type="radio" name="<?php echo esc_attr($this->option_name); ?>[sidebar_position]" value="none" <?php checked($sidebar_position, 'none'); ?>>
+                <span class="sidebar-layout-preview no-sidebar">
+                    <span class="layout-content full-width"></span>
+                </span>
+                <span class="layout-label"><?php esc_html_e('Without Sidebar', 'budhilaw-blog'); ?></span>
+            </label>
         </div>
         <p class="description"><?php esc_html_e('Choose the position of the sidebar in your theme layout.', 'budhilaw-blog'); ?></p>
-        <?php
-    }
-
-    /**
-     * Render disable sidebar field
-     */
-    public function render_disable_sidebar_field() {
-        $options = $this->get_options();
-        $value = isset($options['disable_sidebar_slugs']) ? $options['disable_sidebar_slugs'] : '';
-        ?>
-        <div class="disable-sidebar-field">
-            <textarea name="budhilaw_blog_options[disable_sidebar_slugs]" id="disable_sidebar_slugs" rows="4" class="large-text code" placeholder="about-me
-contact
-privacy-policy"><?php echo esc_textarea($value); ?></textarea>
-            <p class="description">
-                <?php _e('Enter the slugs of pages where you want to disable the sidebar, one per line.', 'budhilaw-blog'); ?>
-                <br>
-                <?php _e('For example, to disable sidebar on your About page with URL <code>https://example.com/about-me/</code>, enter <code>about-me</code>.', 'budhilaw-blog'); ?>
-            </p>
-            <div class="sidebar-preview">
-                <div class="preview-label"><?php _e('Preview:', 'budhilaw-blog'); ?></div>
-                <div class="preview-container">
-                    <div class="preview-content"></div>
-                    <div class="preview-sidebar"></div>
-                </div>
-                <div class="preview-description">
-                    <?php _e('When you disable the sidebar for a page, the content will expand to use the full width of the container.', 'budhilaw-blog'); ?>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
-     * Render field for disabling sidebar on single posts
-     */
-    public function render_disable_sidebar_singles_field() {
-        $options = $this->get_options();
-        $disabled = isset($options['disable_sidebar_singles']) ? $options['disable_sidebar_singles'] : false;
-        ?>
-        <div class="disable-sidebar-singles-field">
-            <label>
-                <input type="checkbox" name="<?php echo esc_attr($this->option_name); ?>[disable_sidebar_singles]" value="1" <?php checked($disabled, true); ?>>
-                <?php esc_html_e('Disable sidebar on all single posts', 'budhilaw-blog'); ?>
-            </label>
-            <p class="description">
-                <?php esc_html_e('Check this option to hide the sidebar on all individual post pages.', 'budhilaw-blog'); ?>
-            </p>
-        </div>
         <?php
     }
 
@@ -347,20 +286,6 @@ privacy-policy"><?php echo esc_textarea($value); ?></textarea>
                         </div>
                         
                         <div class="option-group">
-                            <h3 class="option-title"><?php esc_html_e('Disable Sidebar on Single Posts', 'budhilaw-blog'); ?></h3>
-                            <div class="option-control">
-                                <?php $this->render_disable_sidebar_singles_field(); ?>
-                            </div>
-                        </div>
-                        
-                        <div class="option-group">
-                            <h3 class="option-title"><?php esc_html_e('Disable Sidebar on Specific Pages', 'budhilaw-blog'); ?></h3>
-                            <div class="option-control">
-                                <?php $this->render_disable_sidebar_field(); ?>
-                            </div>
-                        </div>
-                        
-                        <div class="option-group">
                             <h3 class="option-title"><?php esc_html_e('Post Thumbnail Position', 'budhilaw-blog'); ?></h3>
                             <div class="option-control">
                                 <?php $this->render_thumbnail_position_field(); ?>
@@ -426,30 +351,10 @@ privacy-policy"><?php echo esc_textarea($value); ?></textarea>
     public function validate_options($input) {
         $validated = array();
 
-        if (isset($input['sidebar_position']) && in_array($input['sidebar_position'], array('right', 'left'))) {
+        if (isset($input['sidebar_position']) && in_array($input['sidebar_position'], array('right', 'left', 'none'))) {
             $validated['sidebar_position'] = $input['sidebar_position'];
         } else {
             $validated['sidebar_position'] = $this->default_options['sidebar_position'];
-        }
-        
-        // Validate disable sidebar on singles option
-        $validated['disable_sidebar_singles'] = isset($input['disable_sidebar_singles']) ? true : false;
-        
-        if (isset($input['disable_sidebar_slugs'])) {
-            // Sanitize by converting to array, trimming each line, then back to string
-            $slugs = explode("\n", $input['disable_sidebar_slugs']);
-            $sanitized_slugs = array();
-            
-            foreach ($slugs as $slug) {
-                $slug = trim($slug);
-                if (!empty($slug)) {
-                    $sanitized_slugs[] = sanitize_title($slug);
-                }
-            }
-            
-            $validated['disable_sidebar_slugs'] = implode("\n", $sanitized_slugs);
-        } else {
-            $validated['disable_sidebar_slugs'] = '';
         }
         
         // Validate thumbnail position
@@ -484,38 +389,6 @@ privacy-policy"><?php echo esc_textarea($value); ?></textarea>
     }
 
     /**
-     * Check if sidebar should be disabled for current page
-     *
-     * @return bool Whether sidebar should be disabled
-     */
-    public function is_sidebar_disabled() {
-        $options = $this->get_options();
-        
-        // Check if we should disable sidebar on all single posts
-        if (isset($options['disable_sidebar_singles']) && $options['disable_sidebar_singles'] && is_single()) {
-            return true;
-        }
-        
-        // Check if we should disable sidebar based on slug
-        $disable_slugs = isset($options['disable_sidebar_slugs']) ? $options['disable_sidebar_slugs'] : '';
-        
-        if (empty($disable_slugs)) {
-            return false;
-        }
-        
-        // Get current page slug
-        global $post;
-        if (!$post) {
-            return false;
-        }
-        
-        $current_slug = $post->post_name;
-        $disable_slugs_array = array_map('trim', explode("\n", $disable_slugs));
-        
-        return in_array($current_slug, $disable_slugs_array);
-    }
-
-    /**
      * Add sidebar position class to body
      *
      * @param array $classes Body classes
@@ -526,12 +399,11 @@ privacy-policy"><?php echo esc_textarea($value); ?></textarea>
         
         // Add sidebar position class
         if (isset($options['sidebar_position'])) {
-            $classes[] = 'sidebar-' . esc_attr($options['sidebar_position']);
-        }
-        
-        // Add no-sidebar class if sidebar is disabled for this page
-        if ($this->is_sidebar_disabled()) {
-            $classes[] = 'no-sidebar';
+            if ($options['sidebar_position'] === 'none') {
+                $classes[] = 'no-sidebar';
+            } else {
+                $classes[] = 'sidebar-' . esc_attr($options['sidebar_position']);
+            }
         }
         
         return $classes;

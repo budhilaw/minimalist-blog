@@ -12,23 +12,17 @@ get_header();
 // Get the sidebar position option from theme
 global $budhilaw_blog_theme_options;
 $sidebar_position = 'right'; // Default position
+$sidebar_disabled = false;
+
 if (isset($budhilaw_blog_theme_options) && method_exists($budhilaw_blog_theme_options, 'get_options')) {
     $options = $budhilaw_blog_theme_options->get_options();
     if (isset($options['sidebar_position'])) {
         $sidebar_position = $options['sidebar_position'];
+        // Check if "Without Sidebar" option is selected
+        if ($sidebar_position === 'none') {
+            $sidebar_disabled = true;
+        }
     }
-}
-
-// Check if sidebar should be disabled for this page
-$sidebar_disabled = isset($budhilaw_blog_theme_options) && 
-    method_exists($budhilaw_blog_theme_options, 'is_sidebar_disabled') && 
-    $budhilaw_blog_theme_options->is_sidebar_disabled();
-
-// Add body class if sidebar is disabled
-if ($sidebar_disabled) {
-    add_filter('body_class', function($classes) {
-        return array_merge($classes, array('no-sidebar'));
-    });
 }
 
 // Set container class based on sidebar position

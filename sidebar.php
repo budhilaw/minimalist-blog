@@ -5,11 +5,15 @@
  * @package Budhilaw_Blog
  */
 
-// Check if sidebar should be disabled by slug
+// Get theme options to check sidebar position
 global $budhilaw_blog_theme_options;
-if (isset($budhilaw_blog_theme_options) && method_exists($budhilaw_blog_theme_options, 'is_sidebar_disabled') && $budhilaw_blog_theme_options->is_sidebar_disabled()) {
-    // Add the no-sidebar class via the body class filter (already done in theme options class)
-    return;
+$sidebar_position = 'right'; // Default position
+if (isset($budhilaw_blog_theme_options) && method_exists($budhilaw_blog_theme_options, 'get_options')) {
+    $options = $budhilaw_blog_theme_options->get_options();
+    if (isset($options['sidebar_position']) && $options['sidebar_position'] === 'none') {
+        // Don't display sidebar at all if "Without Sidebar" is selected
+        return;
+    }
 }
 
 // Check if sidebar is active (has widgets)
