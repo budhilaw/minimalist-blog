@@ -1462,6 +1462,16 @@ img {
   background-position: center;
 }
 
+.dark .post-navigation .nav-previous .nav-subtitle:before,
+.dark .post-navigation .nav-next .nav-subtitle:after {
+  filter: invert(1);
+}
+
+.dark .post-navigation .nav-previous a,
+.dark .post-navigation .nav-next a {
+  background-color: hsl(var(--muted));
+}
+
 .post-navigation .nav-title {
   font-size: 1rem;
   font-weight: 600;
@@ -1495,13 +1505,19 @@ img {
 }
 
 .footer-menu a {
-  color: #808080;
+  color: hsl(var(--foreground));
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-menu a:hover {
-  color: #000000;
+  color: hsl(var(--muted-foreground));
+}
+
+ul.footer-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .social-links {
