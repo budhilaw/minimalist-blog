@@ -195,6 +195,51 @@ function budhilaw_blog_scripts() {
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
     }
+
+    // Enqueue PrismJS for code syntax highlighting
+    wp_enqueue_style('prismjs-style', get_template_directory_uri() . '/assets/css/prism.css', array(), '1.30.0');
+    
+    // Core PrismJS - using the core version first
+    wp_enqueue_script('prismjs-core', get_template_directory_uri() . '/assets/js/prism-core.js', array(), '1.30.0', true);
+    wp_enqueue_script('prismjs-markup', get_template_directory_uri() . '/assets/js/prism-markup.js', array('prismjs-core'), '1.30.0', true);
+    wp_enqueue_script('prismjs-css', get_template_directory_uri() . '/assets/js/prism-css.js', array('prismjs-core', 'prismjs-markup'), '1.30.0', true);
+    wp_enqueue_script('prismjs-clike', get_template_directory_uri() . '/assets/js/prism-clike.js', array('prismjs-core'), '1.30.0', true);
+    wp_enqueue_script('prismjs-markup-templating', get_template_directory_uri() . '/assets/js/prism-markup-templating.js', array('prismjs-core', 'prismjs-markup'), '1.30.0', true);
+    wp_enqueue_script('prismjs-javascript', get_template_directory_uri() . '/assets/js/prism-javascript.js', array('prismjs-core', 'prismjs-clike'), '1.30.0', true);
+    wp_enqueue_script('prismjs-php', get_template_directory_uri() . '/assets/js/prism-php.js', array('prismjs-core', 'prismjs-markup', 'prismjs-markup-templating'), '1.30.0', true);
+    wp_enqueue_script('prismjs-bash', get_template_directory_uri() . '/assets/js/prism-bash.js', array('prismjs-core'), '1.30.0', true);
+    
+    // Additional languages
+    wp_enqueue_script('prismjs-python', get_template_directory_uri() . '/assets/js/prism-python.js', array('prismjs-core'), '1.30.0', true);
+    wp_enqueue_script('prismjs-rust', get_template_directory_uri() . '/assets/js/prism-rust.js', array('prismjs-core'), '1.30.0', true);
+    wp_enqueue_script('prismjs-go', get_template_directory_uri() . '/assets/js/prism-go.js', array('prismjs-core'), '1.30.0', true);
+    wp_enqueue_script('prismjs-go-module', get_template_directory_uri() . '/assets/js/prism-go-module.js', array('prismjs-core', 'prismjs-go'), '1.30.0', true);
+    wp_enqueue_script('prismjs-nix', get_template_directory_uri() . '/assets/js/prism-nix.js', array('prismjs-core'), '1.30.0', true);
+    
+    // PrismJS main script (must be after core components)
+    wp_enqueue_script('prismjs', get_template_directory_uri() . '/assets/js/prism.js', array(
+        'prismjs-core', 
+        'prismjs-markup', 
+        'prismjs-css', 
+        'prismjs-javascript', 
+        'prismjs-php', 
+        'prismjs-markup-templating', 
+        'prismjs-bash', 
+        'prismjs-clike',
+        'prismjs-python',
+        'prismjs-rust',
+        'prismjs-go',
+        'prismjs-go-module',
+        'prismjs-nix'
+    ), '1.30.0', true);
+    
+    // PrismJS plugins - load after main script
+    wp_enqueue_script('prismjs-line-numbers', get_template_directory_uri() . '/assets/js/prism-line-numbers.js', array('prismjs'), '1.30.0', true);
+    wp_enqueue_script('prismjs-copy-to-clipboard', get_template_directory_uri() . '/assets/js/prism-copy-to-clipboard.js', array('prismjs'), '1.30.0', true);
+    wp_enqueue_script('prismjs-autoloader', get_template_directory_uri() . '/assets/js/prism-autoloader.js', array('prismjs'), '1.30.0', true);
+    
+    // Theme custom JS for code block enhancements - load after all components
+    wp_enqueue_script('budhilaw-blog-code-blocks', get_template_directory_uri() . '/js/code-blocks.js', array('jquery', 'prismjs', 'prismjs-markup', 'prismjs-php', 'prismjs-css', 'prismjs-javascript'), '1.0.0', true);
 }
 add_action( 'wp_enqueue_scripts', 'budhilaw_blog_scripts' );
 

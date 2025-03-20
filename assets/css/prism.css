@@ -1,0 +1,485 @@
+/**
+ * Custom PrismJS Theme - IDE Inspired
+ */
+
+/* Base code styles */
+pre[class*="language-"],
+code[class*="language-"] {
+  font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 4;
+  hyphens: none;
+  background: none;
+  border-radius: 6px;
+  margin: 0;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+}
+
+/* Code block container */
+pre[class*="language-"] {
+  position: relative;
+  padding: 3rem 1rem 1rem;
+  margin: 1.5rem 0;
+  overflow: auto;
+  border: 1px solid rgba(125, 125, 125, 0.2);
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+/* Dark mode */
+.dark pre[class*="language-"] {
+  background-color: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #d4d4d4;
+}
+
+/* Force text color for code in dark mode */
+.dark code[class*="language-"] {
+  color: #d4d4d4;
+}
+
+/* IDE-like header with language tag and copy button */
+pre[class*="language-"]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  background: #e8e8e8;
+  color: #333;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(125, 125, 125, 0.2);
+  border-radius: 6px 6px 0 0;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dark pre[class*="language-"]::before {
+  background: #2d2d2d;
+  color: #ccc;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Line numbers */
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 3rem; /* Adjusted for the header */
+  left: 0;
+  font-size: 0.9rem;
+  width: 3rem;
+  letter-spacing: -1px;
+  border-right: 1px solid rgba(125, 125, 125, 0.2);
+  user-select: none;
+}
+
+.dark .line-numbers .line-numbers-rows {
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.line-numbers-rows > span:before {
+  color: #999;
+  display: block;
+  padding-right: 0.8rem;
+  text-align: right;
+}
+
+.dark .line-numbers-rows > span:before {
+  color: #666;
+}
+
+pre.line-numbers {
+  position: relative;
+  padding-left: 3.5rem;
+  counter-reset: linenumber;
+}
+
+/* Copy button */
+button.copy-to-clipboard-button {
+  position: absolute;
+  top: 0.45rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.2s ease;
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+button.copy-to-clipboard-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.dark button.copy-to-clipboard-button {
+  color: #aaa;
+}
+
+.dark button.copy-to-clipboard-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Success message */
+button.copy-to-clipboard-button.success {
+  color: #4caf50;
+}
+
+.dark button.copy-to-clipboard-button.success {
+  color: #8bc34a;
+}
+
+/* Token colors - Light mode */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #708090;
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #999;
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #07a;
+}
+
+.token.function,
+.token.class-name {
+  color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #e90;
+}
+
+/* Token colors - Dark mode */
+.dark .token.comment,
+.dark .token.prolog,
+.dark .token.doctype,
+.dark .token.cdata {
+  color: #6a9955;
+}
+
+.dark .token.punctuation {
+  color: #d4d4d4;
+}
+
+.dark .token.property,
+.dark .token.tag,
+.dark .token.boolean,
+.dark .token.number,
+.dark .token.constant,
+.dark .token.symbol,
+.dark .token.deleted {
+  color: #ce9178;
+}
+
+.dark .token.selector,
+.dark .token.attr-name,
+.dark .token.string,
+.dark .token.char,
+.dark .token.builtin,
+.dark .token.inserted {
+  color: #b5cea8;
+}
+
+.dark .token.operator,
+.dark .token.entity,
+.dark .token.url,
+.dark .language-css .token.string,
+.dark .style .token.string {
+  color: #d4d4d4;
+}
+
+.dark .token.atrule,
+.dark .token.attr-value,
+.dark .token.keyword {
+  color: #569cd6;
+}
+
+.dark .token.function,
+.dark .token.class-name {
+  color: #dcdcaa;
+}
+
+.dark .token.regex,
+.dark .token.important,
+.dark .token.variable {
+  color: #9cdcfe;
+}
+
+/* PHP specific styling */
+.language-php .token.delimiter,
+.language-php .token.keyword {
+  color: #0066aa;
+}
+
+.dark .language-php .token.delimiter,
+.dark .language-php .token.keyword {
+  color: #569cd6;
+}
+
+.language-php .token.variable {
+  color: #dd4a68;
+}
+
+.dark .language-php .token.variable {
+  color: #9cdcfe;
+}
+
+.language-php .token.string {
+  color: #690;
+}
+
+.dark .language-php .token.string {
+  color: #ce9178;
+}
+
+.language-php .token.comment {
+  color: #708090;
+}
+
+.dark .language-php .token.comment {
+  color: #6a9955;
+}
+
+.language-php .token.function {
+  color: #dd4a68;
+}
+
+.dark .language-php .token.function {
+  color: #dcdcaa;
+}
+
+/* Blog content inline code styling */
+.blog-content :not(pre) > code {
+  font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  background-color: rgba(175, 184, 193, 0.2);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: #333;
+}
+
+.dark .blog-content :not(pre) > code {
+  background-color: rgba(110, 118, 129, 0.4);
+  color: #e6e6e6;
+}
+
+/* Make sure code blocks are full width on mobile */
+@media (max-width: 768px) {
+  pre[class*="language-"] {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  pre[class*="language-"]::before {
+    border-radius: 0;
+  }
+}
+
+/* Additional language-specific styling */
+
+/* Rust specific styling */
+.language-rust .token.function,
+.language-rust .token.type-definition {
+  color: #dd4a68;
+}
+
+.dark .language-rust .token.function,
+.dark .language-rust .token.type-definition {
+  color: #dcdcaa;
+}
+
+.language-rust .token.keyword,
+.language-rust .token.operator {
+  color: #07a;
+}
+
+.dark .language-rust .token.keyword,
+.dark .language-rust .token.operator {
+  color: #569cd6;
+}
+
+.language-rust .token.macro,
+.language-rust .token.directive {
+  color: #905;
+}
+
+.dark .language-rust .token.macro,
+.dark .language-rust .token.directive {
+  color: #ce9178;
+}
+
+.language-rust .token.lifetime {
+  color: #690;
+  font-style: italic;
+}
+
+.dark .language-rust .token.lifetime {
+  color: #b5cea8;
+  font-style: italic;
+}
+
+/* Go specific styling */
+.language-go .token.function,
+.language-go .token.namespace {
+  color: #dd4a68;
+}
+
+.dark .language-go .token.function,
+.dark .language-go .token.namespace {
+  color: #dcdcaa;
+}
+
+.language-go .token.keyword,
+.language-go .token.builtin {
+  color: #07a;
+}
+
+.dark .language-go .token.keyword,
+.dark .language-go .token.builtin {
+  color: #569cd6;
+}
+
+.language-go .token.string {
+  color: #690;
+}
+
+.dark .language-go .token.string {
+  color: #ce9178;
+}
+
+/* Python specific styling */
+.language-python .token.function {
+  color: #dd4a68;
+}
+
+.dark .language-python .token.function {
+  color: #dcdcaa;
+}
+
+.language-python .token.decorator {
+  color: #905;
+}
+
+.dark .language-python .token.decorator {
+  color: #ce9178;
+}
+
+.language-python .token.keyword {
+  color: #07a;
+}
+
+.dark .language-python .token.keyword {
+  color: #569cd6;
+}
+
+.language-python .token.string {
+  color: #690;
+}
+
+.dark .language-python .token.string {
+  color: #b5cea8;
+}
+
+.language-python .token.builtin {
+  color: #905;
+}
+
+.dark .language-python .token.builtin {
+  color: #ce9178;
+}
+
+/* Nix specific styling */
+.language-nix .token.function {
+  color: #dd4a68;
+}
+
+.dark .language-nix .token.function {
+  color: #dcdcaa;
+}
+
+.language-nix .token.attr-name {
+  color: #905;
+}
+
+.dark .language-nix .token.attr-name {
+  color: #ce9178;
+}
+
+.language-nix .token.attr-value {
+  color: #690;
+}
+
+.dark .language-nix .token.attr-value {
+  color: #b5cea8;
+}
+
+.language-nix .token.string {
+  color: #690;
+}
+
+.dark .language-nix .token.string {
+  color: #b5cea8;
+} 
