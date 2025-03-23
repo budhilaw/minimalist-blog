@@ -27,6 +27,7 @@ class Budhilaw_Blog_Theme_Options {
         'sidebar_position' => 'right',
         'thumbnail_position' => 'top',
         'thumbnail_size' => 'medium',
+        'footer_copyright' => '',
     );
 
     /**
@@ -48,6 +49,7 @@ class Budhilaw_Blog_Theme_Options {
             'sidebar_position' => 'right',
             'thumbnail_position' => 'top',
             'thumbnail_size' => 'medium',
+            'footer_copyright' => '',
         );
         $this->options = get_option($this->option_name, $this->default_options);
         
@@ -120,6 +122,14 @@ class Budhilaw_Blog_Theme_Options {
             'thumbnail_size',
             esc_html__('Post Thumbnail Size', 'budhilaw-blog'),
             array($this, 'render_thumbnail_size_field'),
+            'budhilaw-blog-options-layout',
+            'layout_section'
+        );
+        
+        add_settings_field(
+            'footer_copyright',
+            esc_html__('Footer Copyright Text', 'budhilaw-blog'),
+            array($this, 'render_footer_copyright_field'),
             'budhilaw-blog-options-layout',
             'layout_section'
         );
@@ -228,6 +238,22 @@ class Budhilaw_Blog_Theme_Options {
     }
 
     /**
+     * Render footer copyright field
+     */
+    public function render_footer_copyright_field() {
+        $options = $this->get_options();
+        $copyright = isset($options['footer_copyright']) ? $options['footer_copyright'] : '';
+        ?>
+        <textarea name="<?php echo esc_attr($this->option_name); ?>[footer_copyright]" class="large-text" rows="4"><?php echo esc_textarea($copyright); ?></textarea>
+        <p class="description">
+            <?php esc_html_e('Enter custom copyright text to display in the footer. HTML is allowed. Leave blank to use the default copyright text.', 'budhilaw-blog'); ?>
+            <br>
+            <?php esc_html_e('Example: Copyright &copy; 2024 Your Company. All rights reserved.', 'budhilaw-blog'); ?>
+        </p>
+        <?php
+    }
+
+    /**
      * Render options page
      */
     public function render_options_page() {
@@ -296,6 +322,13 @@ class Budhilaw_Blog_Theme_Options {
                             <h3 class="option-title"><?php esc_html_e('Post Thumbnail Size', 'budhilaw-blog'); ?></h3>
                             <div class="option-control">
                                 <?php $this->render_thumbnail_size_field(); ?>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <h3 class="option-title"><?php esc_html_e('Footer Copyright Text', 'budhilaw-blog'); ?></h3>
+                            <div class="option-control">
+                                <?php $this->render_footer_copyright_field(); ?>
                             </div>
                         </div>
                     </div>
@@ -370,6 +403,13 @@ class Budhilaw_Blog_Theme_Options {
             $validated['thumbnail_size'] = $input['thumbnail_size'];
         } else {
             $validated['thumbnail_size'] = $this->default_options['thumbnail_size'];
+        }
+        
+        // Validate footer copyright
+        if (isset($input['footer_copyright'])) {
+            $validated['footer_copyright'] = wp_kses_post($input['footer_copyright']);
+        } else {
+            $validated['footer_copyright'] = $this->default_options['footer_copyright'];
         }
 
         return $validated;
