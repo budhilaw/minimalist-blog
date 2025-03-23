@@ -316,29 +316,60 @@ img {
   opacity: 1;
 }
 
-/* Dropdown / Sub-menu Styling */
-.main-navigation .sub-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 200px;
-  background-color: hsl(var(--card));
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius);
-  z-index: 999;
-  border: 1px solid hsl(var(--border));
-  padding: 8px 0;
-  overflow: hidden;
-  transform: translateY(10px);
-  transition: transform 0.2s ease, opacity 0.2s ease;
+/* Hide submenu by default */
+.sub-menu {
+  display: none !important;
   opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
+  transition: none;
 }
 
-.main-navigation .menu > li:hover > .sub-menu {
-  display: block;
-  transform: translateY(0);
+/* Show submenu only when parent is active */
+.menu-item-has-children.active > .sub-menu {
+  display: block !important;
   opacity: 1;
+  visibility: visible;
+  max-height: 1000px;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+/* Make submenu always hidden at first */
+.main-navigation .menu-item-has-children > .sub-menu {
+  position: static;
+  box-shadow: none;
+  border-radius: 0;
+  background-color: hsl(var(--secondary));
+  padding: 0;
+  width: 100%;
+}
+
+/* Dropdown / Sub-menu Styling */
+.main-navigation .sub-menu {
+  position: static;
+  box-shadow: none;
+  border-radius: 0;
+  background-color: hsl(var(--secondary));
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: none;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  display: none !important; /* Hide completely from the flow */
+}
+
+/* Show submenu when parent is active */
+.main-navigation .menu-item-has-children.active > .sub-menu {
+  max-height: 1000px;
+  padding: 0.5rem 0;
+  opacity: 1;
+  visibility: visible;
+  display: block !important; /* Show when active */
+  transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
 .main-navigation .sub-menu li {
@@ -384,32 +415,271 @@ img {
 }
 
 @media (max-width: 767px) {
+  /* Menu toggle button */
   .menu-toggle {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .menu-toggle:hover {
+    background-color: hsl(var(--secondary));
+  }
+  
+  .menu-toggle svg {
+    color: hsl(var(--foreground));
+    transition: transform 0.3s ease;
+  }
+  
+  .toggled .menu-toggle svg {
+    transform: rotate(90deg);
   }
 
-  .main-navigation ul {
+  /* Menu container */
+  .main-navigation .menu-container {
     display: none;
-    position: absolute;
-    top: 4rem;
+    position: fixed;
+    top: 70px;
     left: 0;
     right: 0;
-    flex-direction: column;
-    background-color: hsl(var(--background));
-    border-bottom: 1px solid hsl(var(--border));
-    padding: 1rem;
-    z-index: 999;
+    z-index: 9999;
+    background-color: hsl(var(--card));
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-top: 1px solid hsl(var(--border));
+    overflow: auto;
+    max-height: calc(100vh - 70px);
   }
 
-  .main-navigation.toggled ul {
+  /* Toggled state */
+  .main-navigation.toggled .menu-container {
+    display: block !important;
+  }
+
+  /* Menu styling */
+  .main-navigation ul {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Menu item styling */
+  .main-navigation .menu > li {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .main-navigation .menu > li > a {
+    padding: 0.875rem 1.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  .main-navigation .sub-menu {
-    position: static;
-    box-shadow: none;
-    border: none;
-    padding-left: 1rem;
+  .main-navigation .menu > li > a:hover,
+  .main-navigation .menu > li.current-menu-item > a {
+    background-color: hsl(var(--secondary));
+    border-left-color: hsl(var(--primary));
+    padding-left: calc(1.5rem + 5px);
+  }
+
+  .main-navigation .menu > li > a::after {
+    display: none;
+  }
+}
+
+.main-navigation.toggled .menu-container {
+  display: block !important;
+}
+
+.main-navigation ul {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0.5rem 0 !important;
+}
+
+.dark .main-navigation .menu-container {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+/* Update menu item styles for the new structure */
+.main-navigation .menu {
+  flex-direction: column;
+  width: 100%;
+}
+
+.main-navigation .menu > li {
+  margin: 0;
+  width: 100%;
+}
+  
+.main-navigation .menu > li > a {
+  padding: 0.875rem 1.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main-navigation .menu > li > a:hover,
+.main-navigation .menu > li.current-menu-item > a {
+  background-color: hsl(var(--secondary));
+  border-left-color: hsl(var(--primary));
+  padding-left: calc(1.5rem + 5px);
+}
+
+.main-navigation .menu > li > a::after {
+  display: none;
+}
+
+/* Add arrow indicators for parent menu items */
+.main-navigation .menu-item-has-children > a::after {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.2s ease;
+}
+
+.main-navigation .menu-item-has-children.active > a::after {
+  transform: rotate(180deg);
+}
+
+.main-navigation .sub-menu {
+  position: static;
+  box-shadow: none;
+  border-radius: 0;
+  background-color: hsl(var(--secondary));
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: none;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  display: none; /* Hide completely from the flow */
+}
+
+.dark .main-navigation .sub-menu {
+  background-color: hsl(var(--secondary));
+}
+
+.main-navigation .menu-item-has-children.active > .sub-menu {
+  max-height: 1000px;
+  padding: 0.5rem 0;
+  opacity: 1;
+  visibility: visible;
+  display: block; /* Show when active */
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.main-navigation .sub-menu li {
+  margin: 0;
+}
+  
+.main-navigation .sub-menu a {
+  padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+  border-left: 3px solid transparent;
+}
+  
+.main-navigation .sub-menu a:hover,
+.main-navigation .sub-menu .current-menu-item > a {
+  background-color: hsl(var(--muted));
+  border-left-color: hsl(var(--primary));
+  padding-left: calc(2.5rem + 5px);
+}
+  
+/* Fade-in animation for menu items */
+.main-navigation.toggled .menu > li {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInMenuItem 0.3s ease forwards;
+}
+  
+@keyframes fadeInMenuItem {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Staggered animation delay for menu items */
+  .main-navigation.toggled .menu > li:nth-child(1) { animation-delay: 0.05s; }
+  .main-navigation.toggled .menu > li:nth-child(2) { animation-delay: 0.1s; }
+  .main-navigation.toggled .menu > li:nth-child(3) { animation-delay: 0.15s; }
+  .main-navigation.toggled .menu > li:nth-child(4) { animation-delay: 0.2s; }
+  .main-navigation.toggled .menu > li:nth-child(5) { animation-delay: 0.25s; }
+  .main-navigation.toggled .menu > li:nth-child(6) { animation-delay: 0.3s; }
+  .main-navigation.toggled .menu > li:nth-child(7) { animation-delay: 0.35s; }
+  .main-navigation.toggled .menu > li:nth-child(8) { animation-delay: 0.4s; }
+
+@media (max-width: 767px) {
+  /* Submenu toggle button */
+  .submenu-toggle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submenu-toggle:hover {
+    background-color: hsl(var(--secondary));
+  }
+  
+  .submenu-toggle::before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid hsl(var(--foreground));
+    border-bottom: 2px solid hsl(var(--foreground));
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+  
+  .menu-item-has-children.active > a .submenu-toggle::before {
+    transform: rotate(-135deg);
+  }
+  
+  .dark .submenu-toggle::before {
+    border-color: hsl(var(--foreground));
+  }
+  
+  /* Better spacing for menu with toggle buttons */
+  .main-navigation .menu > li > a {
+    padding-right: 0.75rem;
+  }
+  
+  /* Remove the default arrow we added earlier for menu items with children */
+  .main-navigation .menu-item-has-children > a::after {
+    display: none;
   }
 }
 
@@ -2171,5 +2441,127 @@ ul.page-numbers {
 @media (max-width: 768px) {
   .content-area.full-width {
     padding: 0 1rem;
+  }
+}
+
+/* Header Search */
+.header-search {
+  position: relative;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: hsl(var(--foreground));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.search-toggle:hover {
+  background-color: hsl(var(--secondary));
+}
+
+.dark .search-toggle:hover {
+  background-color: hsl(var(--secondary));
+}
+
+.search-form-container {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 300px;
+  z-index: 100;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.search-form-container.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.search-form {
+  display: flex;
+  width: 100%;
+}
+
+.search-form .search-field {
+  flex: 1;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius) 0 0 var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.search-form .search-submit {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-form .search-submit:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.dark .search-form .search-field {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark .search-form-container {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+@media (max-width: 767px) {
+  .search-form-container {
+    position: fixed;
+    top: 70px;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
+}
+
+/* Base style for the menu container */
+.main-navigation .menu-container {
+  display: none; /* Hidden by default */
+}
+
+/* Show on desktop */
+@media (min-width: 768px) {
+  .main-navigation .menu-container {
+    display: flex !important; /* Always visible on desktop */
+  }
+}
+
+/* Mobile menu styles - ensure menu is hidden until toggled */
+@media (max-width: 767px) {
+  .main-navigation.toggled .menu-container {
+    display: block !important; /* Only show when toggled on mobile */
   }
 }

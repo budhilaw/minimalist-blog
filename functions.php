@@ -192,6 +192,7 @@ function budhilaw_blog_scripts() {
     wp_enqueue_script( 'budhilaw-blog-theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', array(), BUDHILAW_BLOG_VERSION, true );
     wp_enqueue_script( 'budhilaw-blog-sidebar-check', get_template_directory_uri() . '/js/sidebar-check.js', array(), BUDHILAW_BLOG_VERSION, true );
     wp_enqueue_script( 'budhilaw-blog-back-to-top', get_template_directory_uri() . '/js/back-to-top.js', array(), BUDHILAW_BLOG_VERSION, true );
+    wp_enqueue_script( 'budhilaw-blog-search-toggle', get_template_directory_uri() . '/js/search-toggle.js', array(), BUDHILAW_BLOG_VERSION, true );
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );

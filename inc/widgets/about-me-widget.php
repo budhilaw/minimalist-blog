@@ -127,9 +127,6 @@ class Budhilaw_Blog_About_Me_Widget extends WP_Widget {
                             }
                             
                             if (imgUrl) {
-                                console.log('Image URL found:', imgUrl);
-                                console.log('Target input ID:', targetInputId);
-                                
                                 // Find the input field - try with CSS escaped ID first
                                 var $input = $('#' + CSS.escape(targetInputId));
                                 
@@ -145,7 +142,6 @@ class Budhilaw_Blog_About_Me_Widget extends WP_Widget {
                                 
                                 if ($input.length) {
                                     $input.val(imgUrl).trigger('change');
-                                    console.log('Input found and value set to:', imgUrl);
                                     
                                     // Update the preview
                                     var $container = $input.closest('.media-upload-container');
