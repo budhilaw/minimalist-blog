@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Load all widget files
  */
 require get_template_directory() . '/inc/widgets/popular-articles-widget.php';
+require get_template_directory() . '/inc/widgets/about-me-widget.php';
 // Add more widget includes here as they are created
 
 /**
@@ -21,6 +22,7 @@ require get_template_directory() . '/inc/widgets/popular-articles-widget.php';
  */
 function budhilaw_blog_register_widgets() {
     register_widget( 'Budhilaw_Blog_Popular_Articles_Widget' );
+    register_widget( 'Budhilaw_Blog_About_Me_Widget' );
     // Register other widgets here
 }
 add_action( 'widgets_init', 'budhilaw_blog_register_widgets' ); 
